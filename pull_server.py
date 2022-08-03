@@ -2,7 +2,7 @@ import config
 from wifi import WiFi
 from sensor import Sensor
 
-print('Start')
+print('Start Server')
 print('  source = ', config.app['source'])
 
 sensor = Sensor(config.sensor['adc_gpio_pin_num'], config.app['zero_adc_reading'])

@@ -25,8 +25,14 @@ server = {
     'port': 80
 }
 
+client = {
+    #'sleep_ms': 1000 * 3600 # sleep for 1hr between readings when in client mode
+    'sleep_ms': 1000 * 60 ##@@ TODO rm me
+}
+
 endpoint = {
-    'url': 'http://rp4.local:8080/picowell',
-    'retries': 2,
-    'retry_timeout': 10
+    #'url': 'http://rp4.local:8080/picowell',
+    'url': 'http://arrow.local:8080/picowell',
+    'retries': 0,
+    'retry_timeout_s': 10
 }
