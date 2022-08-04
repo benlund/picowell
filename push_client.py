@@ -1,3 +1,4 @@
+import gc
 import machine
 import time
 import urequests
@@ -51,17 +52,23 @@ while True:
                 try:
                     print('  send to: ', config.endpoint['url'])
                     response = urequests.post(config.endpoint['url'],
-                                                  json={'source': config.app['source'], 'reading': reading})
+                                              json={'source': config.app['source'], 'reading': reading})
                     print('    response: ', response.status_code)
                     break
 
                 except Exception as e:
                     print('    error: ', e)
 
+                finally:
+                    # Make sure to close response to avoidn ENOMEM errors
+                    if response:
+                        response.close()
+
                 retry_count += 1
 
             dots(3)
             wifi.disconnect()
+            gc.collect()
 
     except Exception as e:
         dots(4)
@@ -69,4 +76,5 @@ while True:
 
     dots(5)
     ## TODO deep sleep instead?
-    machine.lightsleep(config.client['sleep_ms'])
+    #machine.lightsleep(config.client['sleep_ms']) ##@@ TODO
+    time.sleep(config.client['sleep_ms'] / 1000)
