@@ -75,6 +75,6 @@ while True:
         print('error: ', e)
 
     dots(5)
-    ## TODO deep sleep instead?
-    #machine.lightsleep(config.client['sleep_ms']) ##@@ TODO
-    time.sleep(config.client['sleep_ms'] / 1000)
+    machine.deepsleep(config.client['sleep_ms'])
+    #machine.lightsleep(config.client['sleep_ms'])
+    #time.sleep(config.client['sleep_ms'] / 1000)
