@@ -54,7 +54,10 @@ class WiFi:
                 print('   waiting for connection (', wait_count, ')')
                 time.sleep(1)
 
-            if self.wlan.status() < 0 or self.wlan.status() >= 3:
+            status = self.wlan.status()
+            print('   status = ', status)
+
+            if status < 0 or status >= 3:
                 break
 
             wait_count += 1
