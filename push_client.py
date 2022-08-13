@@ -89,10 +89,9 @@ while True:
                 try:
                     url = config.endpoint['url']
                     data = {'source': config.app['source'], 'sensor': reading, 'vsys' : vsr}
-                    json_data = json.dumps(data)
-                    print('  send to: ', config.endpoint['url'])
-                    print('   json: ', json_data)
-                    response = urequests.post(url, data=json_data, headers={'Content-Type': 'application/json'})
+                    print('  send to: ', url)
+                    print('   data: ', data)
+                    response = urequests.post(url, json=data)
 
                     http_done = True
                     response_code = response.status_code
@@ -136,6 +135,13 @@ while True:
 
     iteration += 1
 
-    #machine.lightsleep(config.client['sleep_ms'])
-    #machine.deepsleep(config.client['sleep_ms'])
-    time.sleep(config.client['sleep_ms'] / 1000)
+    if config.client['loop']:
+        if 'light' == config.client['sleep_mode']:
+            machine.lightsleep(config.client['sleep_ms'])
+        elif 'deep' == config.client['sleep_mode']:
+            # Don't use this, not implemented in micropython
+            machine.deepsleep(config.client['sleep_ms'])
+        else:
+            time.sleep(config.client['sleep_ms'] / 1000)
+    else:
+        break

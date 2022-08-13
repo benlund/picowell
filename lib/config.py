@@ -3,7 +3,16 @@ app = {
     'source': 'well-sensor',
 
     # average of 5 readings taken outside water
-    'zero_adc_reading': 19402.4
+    'low_adc_anchor': {
+        'feet': 0.0,
+        'adc': 11352.4
+    },
+
+    # average of 5 readings taken at measured depth
+    'high_adc_anchor': {
+        'feet': 5.8,
+        'adc': 18800.8
+    }
 }
 
 wifi = {
@@ -26,13 +35,17 @@ server = {
 }
 
 client = {
+    'loop': True,
+    #'sleep_mode': 'light',
+    #'sleep_mode': 'deep', # don't use this, not implemented in micropython yet
+    'sleep_mode': 'test',
     #'sleep_ms': 1000 * 3600 # sleep for 1hr between readings when in client mode
-    'sleep_ms': 1000 * 60 ##@@ TODO rm me
+    'sleep_ms': 1000 * 90 ##@@ TODO rm me
 }
 
 endpoint = {
-    #'url': 'http://rp4.local:8080/picowell',
-    'url': 'http://arrow.local:8080/picowell',
+    #'url': 'http://rp4.local:3637/picowell',
+    'url': 'http://arrow.local:9292/picowell',
     'retries': 0,
     'retry_timeout_s': 10
 }
