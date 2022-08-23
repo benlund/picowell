@@ -2,16 +2,14 @@ app = {
     # name to associate with this sensor
     'source': 'well-sensor',
 
-    # average of 5 readings taken outside water
     'low_adc_anchor': {
-        'feet': 0.0,
-        'adc': 11352.4
+        'feet': 1.792,
+        'adc': 8832
     },
 
-    # average of 5 readings taken at measured depth
     'high_adc_anchor': {
-        'feet': 5.8,
-        'adc': 18800.8
+        'feet': 4.333,
+        'adc': 11264
     }
 }
 
@@ -25,8 +23,9 @@ wifi = {
 
 sensor = {
     'adc_gpio_pin_num': 28,
-    'num_readings_to_take': 5,
-    'reading_wait_s': 1
+    'num_readings_to_take': 4,
+    'reading_wait_s': 1,
+    'num_bits_to_ignore': 6
 }
 
 server = {
@@ -44,8 +43,8 @@ client = {
 }
 
 endpoint = {
-    #'url': 'http://rp4.local:3637/picowell',
-    'url': 'http://arrow.local:9292/picowell',
+    'url': 'http://rp4.local:3637/picowell',
+    #'url': 'http://arrow.local:9292/picowell',
     'retries': 0,
     'retry_timeout_s': 10
 }
