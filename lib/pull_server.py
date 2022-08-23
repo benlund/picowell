@@ -5,7 +5,7 @@ from sensor import Sensor
 print('Start Server')
 print('  source = ', config.app['source'])
 
-sensor = Sensor(config.sensor['adc_gpio_pin_num'], config.app['zero_adc_reading'])
+sensor = Sensor(config.sensor['adc_gpio_pin_num'], config.app['low_adc_anchor'], config.app['high_adc_anchor'])
 wifi = WiFi(config.wifi['ssid'], config.wifi['password'],
             config.wifi['max_wait_s'], config.wifi['retries'], config.wifi['retry_timeout_s'])
 
@@ -31,7 +31,9 @@ while True:
   try:
     cl, addr = s.accept()
     print('    connection from', addr)
-    reading = sensor.reading(config.sensor['num_readings_to_take'], config.sensor['reading_wait_s'])
+    reading = sensor.reading(config.sensor['num_readings_to_take'],
+                             config.sensor['reading_wait_s'],
+                             config.sensor['num_bits_to_ignore'])
     print('    reading = ', reading)
 
     cl.send(json.dumps({'source': config.app['source'], 'reading': reading}) + "\n")
