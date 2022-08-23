@@ -73,7 +73,9 @@ while True:
             dots(2)
 
             print('Sensor reading')
-            reading = sensor.reading(config.sensor['num_readings_to_take'], config.sensor['reading_wait_s'])
+            reading = sensor.reading(config.sensor['num_readings_to_take'],
+                                     config.sensor['reading_wait_s'],
+                                     config.sensor['num_bits_to_ignore'])
             reading_done = True
             print('  reading = ', reading)
 
