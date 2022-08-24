@@ -23,7 +23,7 @@ wifi = {
 
 sensor = {
     'adc_gpio_pin_num': 28,
-    'num_readings_to_take': 4,
+    'num_readings_to_take': 8,
     'reading_wait_s': 1,
     'num_bits_to_ignore': 6
 }
@@ -35,16 +35,14 @@ server = {
 
 client = {
     'loop': True,
-    #'sleep_mode': 'light',
+    'sleep_mode': 'light',
     #'sleep_mode': 'deep', # don't use this, not implemented in micropython yet
-    'sleep_mode': 'test',
-    #'sleep_ms': 1000 * 3600 # sleep for 1hr between readings when in client mode
-    'sleep_ms': 1000 * 90 ##@@ TODO rm me
+    #'sleep_mode': 'test',
+    'sleep_ms': 1000 * 3600 # sleep for 1hr between readings when in client mode
 }
 
 endpoint = {
     'url': 'http://rp4.local:3637/picowell',
-    #'url': 'http://arrow.local:9292/picowell',
     'retries': 0,
     'retry_timeout_s': 10
 }
