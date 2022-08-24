@@ -32,6 +32,7 @@ def vsys_reading():
     # ADC 3 reads VSYS after a 1/3 voltage divider
     adc = machine.ADC(3).read_u16()
     # MUST set GPIO 29 back to OUT to avoid breaking wifi (for some reason TBD)
+    # - Nope, this still breaks wifi! Disabled
     machine.Pin(29, machine.Pin.OUT)
     return {'adc': adc, 'volts': adc * 3.3 * 3 / 65535}
 
