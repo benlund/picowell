@@ -9,9 +9,7 @@ class WiFi:
         self.max_wait_s = max_wait_s
         self.retries = retries
         self.retry_timeout_s = retry_timeout_s
-
         self.wlan = network.WLAN(network.STA_IF)
-        self.wlan.active(True)
 
 
     def connect(self):
@@ -21,6 +19,8 @@ class WiFi:
         print('  max_wait_s = ', self.max_wait_s)
         print('  retries = ', self.retries)
         print('  retry_timeout_s = ', self.retry_timeout_s)
+
+        self.wlan.active(True)
 
         retry_count = 0
         while retry_count <= self.retries:
@@ -70,3 +70,5 @@ class WiFi:
     def disconnect(self):
         print('WiFi#disconnect')
         self.wlan.disconnect()
+        self.wlan.active(False)
+        self.wlan.deinit()
