@@ -11,10 +11,9 @@ from sensor import Sensor
 print('Start Client')
 print('  source = ', config.app['source'])
 
-led = machine.Pin('LED', machine.Pin.OUT)
-led.off()
 
 def dots(n, on_s=0.1, off_s=0.1):
+    led = machine.Pin('LED', machine.Pin.OUT)
     while n > 0:
         led.on()
         time.sleep(on_s)
@@ -123,7 +122,6 @@ while True:
 
     except Exception as e:
         exception = e
-        dashes(3)
         print('error: ', e)
 
     debug_file.write_json({'iteration': iteration,
