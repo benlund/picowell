@@ -3,13 +3,13 @@ app = {
     'source': 'well-sensor',
 
     'low_adc_anchor': {
-        'feet': 1.792,
-        'adc': 8832
+        'feet': 1.833,
+        'adc': 17600
     },
 
     'high_adc_anchor': {
-        'feet': 4.333,
-        'adc': 11264
+        'feet': 2.667,
+        'adc': 20800
     }
 }
 
