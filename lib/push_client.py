@@ -26,14 +26,28 @@ def dashes(n):
 
 
 def vsys_reading():
-    # GPIO 29 set to IN to initialize ADC 3 for VSYS
-    machine.Pin(29, machine.Pin.IN)
-    # ADC 3 reads VSYS after a 1/3 voltage divider
-    adc = machine.ADC(3).read_u16()
-    # MUST set GPIO 29 back to OUT to avoid breaking wifi (for some reason TBD)
-    # - Nope, this still breaks wifi! Disabled
-    machine.Pin(29, machine.Pin.OUT)
-    return {'adc': adc, 'volts': adc * 3.3 * 3 / 65535}
+    reading = None
+
+    ## TODO short-circuit if wifi is active
+
+    try:
+        # GPIO 25 set to high to enable vsys read on GPIO 29
+        machine.Pin(25, mode=machine.Pin.OUT, pull=machine.Pin.PULL_DOWN).high()
+
+        # GPIO 29 set to IN to initialize ADC 3 for VSYS
+        machine.Pin(29, machine.Pin.IN)
+
+        # ADC 3 reads VSYS after a 1/3 voltage divider
+        vsys_adc = machine.ADC(3).read_u16()
+        reading =  {'adc': vsys_adc, 'volts': vsys_adc * 3 * 3.3 / 65535}
+
+    finally:
+        # Reset GPIO 29 for wifi usage
+        print('reset')
+        machine.Pin(29, machine.Pin.ALT, pull=machine.Pin.PULL_DOWN, alt=7)
+
+    return reading
+
 
 
 sensor = Sensor(config.sensor['adc_gpio_pin_num'], config.app['low_adc_anchor'], config.app['high_adc_anchor'])
@@ -44,6 +58,7 @@ wifi = WiFi(config.wifi['ssid'], config.wifi['password'],
 import debug_file
 
 iteration = 0
+start_time = time.time()
 
 while True:
     vsys_reading_done = False
@@ -57,8 +72,7 @@ while True:
         dots(1)
 
         print('VSYS reading')
-        print('  disabled')
-        vsr = None #vsys_reading()
+        vsr = vsys_reading()
         vsys_reading_done = True
         print('  vsr = ', vsr)
 
@@ -90,7 +104,15 @@ while True:
 
                 try:
                     url = config.endpoint['url']
-                    data = {'source': config.app['source'], 'sensor': reading, 'vsys' : vsr}
+                    data = {
+                        'source': config.app['source'],
+                        'sensor': reading,
+                        'vsys': vsr,
+                        'meta': {
+                            'iteration': iteration,
+                            'uptime_s': time.time() - start_time
+                        }
+                    }
                     print('  send to: ', url)
                     print('   data: ', data)
                     response = urequests.post(url, json=data)
