@@ -8,8 +8,8 @@ app = {
     },
 
     'high_adc_anchor': {
-        'feet': 2.667,
-        'adc': 20800
+        'feet': 4.167,
+        'adc': 27392
     }
 }
 
