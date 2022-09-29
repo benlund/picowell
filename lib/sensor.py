@@ -1,5 +1,6 @@
 import machine
 import time
+import math
 
 MaxAdc = const(2 ** 16)
 MaxVolts = const(3.3)
@@ -14,8 +15,8 @@ class Sensor:
 
         self.pin = machine.ADC(adc_gpio_pin_num)
         self.low_adc = low_adc_anchor['adc']
-        self.low_feet = low_adc_anchor['feet']
-        self.feet_per_adc = (high_adc_anchor['feet'] - low_adc_anchor['feet']) / (high_adc_anchor['adc'] - low_adc_anchor['adc'])
+        self.low_inches = low_adc_anchor['inches']
+        self.inches_per_adc = (high_adc_anchor['inches'] - low_adc_anchor['inches']) / (high_adc_anchor['adc'] - low_adc_anchor['adc'])
 
 
     def reading(self, num_readings_to_take=8, reading_wait_s=1, num_bits_to_ignore=0):
@@ -29,11 +30,22 @@ class Sensor:
 
         ave_adc = int(readings_total / num_readings_to_take) >> num_bits_to_ignore << num_bits_to_ignore
         volts = self.calc_volts(ave_adc)
-        feet = self.calc_feet(ave_adc)
-        if num_bits_to_ignore > 0:
-            ##@@ TODO calc rounding factor based on bits_to_ignore
-            volts = round(volts, 3)
-            feet = round(feet, 3)
+        inches = self.calc_inches(ave_adc)
+        feet = inches / 12
+
+        ##@@ TODO calc rounding factor based on bits_to_ignore, max range, sensitivity
+        volts = round(volts, 1)
+        inches = round(inches, 1)
+        feet = round(feet, 2)
+
+        whole_feet = math.floor(feet)
+        whole_inches = math.floor(inches % 12)
+        fractional_inches = [round((inches % 1) * 8), 8] ## todo chose demoninator based on rounding
+        if fractional_inches[0] == fractional_inches[1]:
+            whole_inches += 1
+            fractional_inches[0] = 0
+
+        ftin = "{}' {} {}/{}\"".format(whole_feet, whole_inches, fractional_inches[0], fractional_inches[1])
 
         return {
             'adc': ave_adc,
@@ -41,7 +53,9 @@ class Sensor:
             'wait': reading_wait_s,
             'bits_ignored': num_bits_to_ignore,
             'volts': volts,
-            'feet': feet
+            'inches': inches,
+            'feet': feet,
+            'ftin': ftin
         }
 
 
@@ -53,5 +67,5 @@ class Sensor:
         return adc * MaxVolts / MaxAdc
 
 
-    def calc_feet(self, adc):
-        return self.low_feet + ( (adc - self.low_adc) * self.feet_per_adc )
+    def calc_inches(self, adc):
+        return self.low_inches + ( (adc - self.low_adc) * self.inches_per_adc )

@@ -4,11 +4,13 @@ app = {
 
     'low_adc_anchor': {
         'feet': 1.833,
+        'inches': 22,
         'adc': 17600
     },
 
     'high_adc_anchor': {
         'feet': 4.167,
+        'inches': 50,
         'adc': 27392
     }
 }
