@@ -34,7 +34,7 @@ class Sensor:
         feet = inches / 12
 
         ##@@ TODO calc rounding factor based on bits_to_ignore, max range, sensitivity
-        volts = round(volts, 1)
+        volts = round(volts, 3)
         inches = round(inches, 1)
         feet = round(feet, 2)
 
