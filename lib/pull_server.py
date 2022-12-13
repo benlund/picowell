@@ -5,7 +5,10 @@ from sensor import Sensor
 print('Start Server')
 print('  source = ', config.app['source'])
 
-sensor = Sensor(config.sensor['adc_gpio_pin_num'], config.app['low_adc_anchor'], config.app['high_adc_anchor'])
+sensor = Sensor(config.sensor['on_gpio_pin_num'],
+                config.sensor['adc_gpio_pin_num'],
+                config.app['low_adc_anchor'],
+                config.app['high_adc_anchor'])
 wifi = WiFi(config.wifi['ssid'], config.wifi['password'],
             config.wifi['max_wait_s'], config.wifi['retries'], config.wifi['retry_timeout_s'])
 
