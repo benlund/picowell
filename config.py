@@ -10,7 +10,9 @@ app = {
     'high_adc_anchor': {
         'inches': 50,
         'adc': 27392
-    }
+    },
+
+    'clock_frequency' : 62500000
 }
 
 wifi = {
@@ -36,9 +38,9 @@ server = {
 
 client = {
     'loop': True,
-    #'sleep_mode': 'light',
+    'sleep_mode': 'light',
     #'sleep_mode': 'deep', # don't use this, not implemented in micropython yet
-    'sleep_mode': 'test',
+    #'sleep_mode': 'test',
     #'sleep_ms': 1000 * 3600 # sleep for 1hr between readings when in client mode
     'sleep_ms': 1000 * 65
 }

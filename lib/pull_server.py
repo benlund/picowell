@@ -2,6 +2,11 @@ import config
 from wifi import WiFi
 from sensor import Sensor
 
+if config.app['clock_frequency']:
+  print('Change clock freq:', config.app['clock_frequency'])
+  import machine
+  machine.freq(config.app['clock_frequency'])
+
 print('Start Server')
 print('  source = ', config.app['source'])
 

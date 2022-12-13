@@ -8,9 +8,6 @@ import config
 from wifi import WiFi
 from sensor import Sensor
 
-print('Start Client')
-print('  source = ', config.app['source'])
-
 
 def dots(n, on_s=0.1, off_s=0.1):
     led = machine.Pin('LED', machine.Pin.OUT)
@@ -49,6 +46,18 @@ def vsys_reading():
     return reading
 
 
+def set_clock_freq():
+    try:
+        if config.app['clock_frequency']:
+            print('Change clock freq:', config.app['clock_frequency'])
+            machine.freq(config.app['clock_frequency'])
+    except:
+        print('Error changing clock freq')
+
+
+print('Start Client')
+print('  source = ', config.app['source'])
+
 
 sensor = Sensor(config.sensor['on_gpio_pin_num'],
                 config.sensor['adc_gpio_pin_num'],
@@ -64,6 +73,8 @@ iteration = 0
 start_time = time.time()
 
 while True:
+    set_clock_freq()
+
     vsys_reading_done = False
     wifi_done = False
     reading_done = False
@@ -79,6 +90,13 @@ while True:
         vsys_reading_done = True
         print('  vsr = ', vsr)
 
+        print('Sensor reading')
+        reading = sensor.reading(config.sensor['num_readings_to_take'],
+                                 config.sensor['reading_wait_s'],
+                                 config.sensor['num_bits_to_ignore'])
+        reading_done = True
+        print('  reading = ', reading)
+
         ip_address = wifi.connect()
 
         if ip_address == None:
@@ -88,13 +106,6 @@ while True:
         else:
             wifi_done = True
             dots(2)
-
-            print('Sensor reading')
-            reading = sensor.reading(config.sensor['num_readings_to_take'],
-                                     config.sensor['reading_wait_s'],
-                                     config.sensor['num_bits_to_ignore'])
-            reading_done = True
-            print('  reading = ', reading)
 
             print('Submit')
             retry_count = 0
