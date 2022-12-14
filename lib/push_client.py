@@ -48,7 +48,7 @@ def vsys_reading():
 
 def set_clock_freq():
     try:
-        if config.app['clock_frequency']:
+        if 'clock_frequency' in config.app:
             print('Change clock freq:', config.app['clock_frequency'])
             machine.freq(config.app['clock_frequency'])
     except:

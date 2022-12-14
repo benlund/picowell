@@ -1,10 +1,22 @@
 import config
 from wifi import WiFi
 from sensor import Sensor
+import machine
+import time
 
-if config.app['clock_frequency']:
+def dots(n, on_s=0.1, off_s=0.1):
+    led = machine.Pin('LED', machine.Pin.OUT)
+    while n > 0:
+        led.on()
+        time.sleep(on_s)
+        led.off()
+        time.sleep(off_s)
+        n -= 1
+
+dots(1)
+
+if 'clock_frequency' in config.app:
   print('Change clock freq:', config.app['clock_frequency'])
-  import machine
   machine.freq(config.app['clock_frequency'])
 
 print('Start Server')
@@ -25,6 +37,8 @@ if ip_address == None:
   sys.exit()
 
 
+dots(2)
+
 import socket
 import json
 
@@ -38,6 +52,7 @@ print('  listening: addr = ', addr)
 while True:
   try:
     cl, addr = s.accept()
+    dots(3)
     print('    connection from', addr)
     reading = sensor.reading(config.sensor['num_readings_to_take'],
                              config.sensor['reading_wait_s'],
