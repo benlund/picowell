@@ -51,15 +51,6 @@ class Sensor:
         inches = round(inches, 1)
         feet = round(feet, 2)
 
-        whole_feet = math.floor(feet)
-        whole_inches = math.floor(inches % 12)
-        fractional_inches = [round((inches % 1) * 8), 8] ## todo chose demoninator based on rounding
-        if fractional_inches[0] == fractional_inches[1]:
-            whole_inches += 1
-            fractional_inches[0] = 0
-
-        ftin = "{}' {} {}/{}\"".format(whole_feet, whole_inches, fractional_inches[0], fractional_inches[1])
-
         return {
             'adc': ave_adc,
             'num': num_readings_to_take,
@@ -68,7 +59,7 @@ class Sensor:
             'volts': volts,
             'inches': inches,
             'feet': feet,
-            'ftin': ftin
+            'ftin': self.calc_ftin(inches)
         }
 
 
@@ -82,3 +73,25 @@ class Sensor:
 
     def calc_inches(self, adc):
         return self.low_inches + ( (adc - self.low_adc) * self.inches_per_adc )
+
+
+    def calc_ftin(self, inches):
+        if inches >= 0:
+            sign = ''
+        else:
+            sign = '-'
+
+        whole_feet = math.floor(abs(inches) / 12)
+        whole_inches = math.floor(abs(inches) % 12)
+        fractional_inches = [round((abs(inches) % 1) * 8), 8] ## todo chose demoninator based on rounding
+
+        if fractional_inches[0] == fractional_inches[1]:
+            whole_inches += 1
+            fractional_inches[0] = 0
+
+        if whole_inches == 12:
+            whole_inches = 0
+            whole_feet += 1
+
+        return "{}{}' {} {}/{}\"".format(sign, whole_feet, whole_inches,
+                                         fractional_inches[0], fractional_inches[1])
