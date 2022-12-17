@@ -16,11 +16,11 @@ Measure and report the depth of water in our well.
 
 ## How it works
 
-The pressure sensor (made watertight using silicone sealant) is dropped to the bottom of the well, attached to the cable which runs up to the top of the well. The Pico W microcontroller and batteries are housed in a waterproof box at the top of the well, with the cable entering the box via a waterproof gland.
+The pressure sensor (made watertight using silicone sealant) is dropped to the bottom of the well, attached to a cable which runs up to the top of the well. The Pico W microcontroller and batteries are housed in a waterproof box at the top of the well, with the cable entering the box via a waterproof gland.
 
-In continuous-running mode, the Pico W wakes up once per hour, takes a reading, connects to our house WiFi (our well is in our front garden so well within range of the house network), and submits a reading to a web server running in the house (TODO link to Endpoint code here when released). The Vsys voltage reading is also submitted so you can tell when the batteries need to be replaced. Between readings the Pico W enters a lightsleep mode (deepsleep mode is not implemented in Micropython yet but would conserve battery life even more).
+In continuous-running mode, the Pico W wakes up once per hour, takes a reading, connects to our house WiFi (our well is in our front garden so well within range of the house network), and submits a reading to a web server running in the house (TODO link to EndPoint code here when released). The VSYS voltage reading is also submitted so you can tell when the batteries need to be replaced. Between readings the Pico W enters a lightsleep mode (deepsleep mode is not implemented in Micropython yet but would conserve battery life even more).
 
-To take the reading, the Pico W measures the voltage on one of its ADC GPIO pins. The readings are quite noisy, so it averages 8 readings, spaced 1 sec apart, and drops the least significant 6 bits from the readings. This gives a very consistent reading with an accuracy within 1% of the range of the sensor. With the 5 PSI sensor, that's a sensitivity of 1-2 inches (5 PSI = 11.55 feet of water x 1% = 1.4inches).
+To take the reading, the Pico W measures the voltage on one of its ADC GPIO pins. The readings are quite noisy, so it averages 8 readings, spaced 1 sec apart, and drops the least significant 6 bits from the readings. This gives a very consistent reading with an accuracy of about 1% of the range of the sensor. With the 5 PSI sensor, that's a sensitivity of 1-2 inches (5 PSI = 11.55 feet of water x 1% = 1.4inches).
 
 Current draw in the different phases (when running from 3xAA NiMH rechargable batteries) is approximately:
 
@@ -30,7 +30,7 @@ Current draw in the different phases (when running from 3xAA NiMH rechargable ba
 
 Current during the awake phase can be reduced by about 7mA by underclocking the processor, but experimentation showed that this hampered wifi connection when out in the garden, so that's disabled on our devices.
 
-There is also a calibration mode, where the Pico W listens for connections, taking readings and returning the results when a connection comes in. This requires a persistent wifi conenction and is therfore not suitable for the real operating mode (it would drain the battery after only a couple of days).
+There is also a calibration mode, where the Pico W listens for connections, taking a reading and returning the result whenever a new connection comes in. This requires a persistent wifi connection and is therfore not suitable for the real operating mode (it would drain the battery after only a couple of days).
 
 We have one device running in our well and another one in our water storge tank. Both report hourly and the batteries last a few weeks betweeen replacements.
 
@@ -115,7 +115,7 @@ You can then take continuous readings by connecting to the device in a loop:
 
 Replacing `192.168.4.136` with the IP of the device.
 
-Calibration requires a low measurement and a high meansurement. The further apart the readings are in terms of water depth, and the closer the high one is to the expected range of the readings, the better the calibration. I've found that a low reading taken with the pressure sensor 1 or 2 inches below the surface is better than a reading taken with the device outside the water.
+Calibration requires a low measurement and a high measurement. The further apart the readings are in terms of water depth, and the closer the high one is to the expected range of the readings, the better the calibration. I've found that a low reading taken with the pressure sensor 1 or 2 inches below the surface is better than a reading taken with the device outside the water.
 
 The depth readings reported by the device in calibration mode don't matter, what matters are the ADC readings. Wait for the device to give  consistent ADC value and then use that as the reference in config.py.
 
