@@ -12,7 +12,8 @@ app = {
         'adc': 27392
     },
 
-    'clock_frequency' : 62500000
+    # Disabled since it seems to hamper wifi connection at lower signal strengths
+    #'clock_frequency' : 62500000
 }
 
 wifi = {
