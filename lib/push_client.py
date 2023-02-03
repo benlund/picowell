@@ -152,8 +152,8 @@ while True:
 
                 retry_count += 1
 
-            wifi.disconnect()
-            gc.collect()
+        wifi.disconnect()
+        gc.collect()
 
 
     except Exception as e:
